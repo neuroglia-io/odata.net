@@ -11,7 +11,7 @@ Imports Microsoft.OData.Service
 Imports Microsoft.OData.Client
 Imports System.Data.Test.Astoria
 Imports System.Text
-Imports AstoriaClientUnitTests.AstoriaClientUnitTests.Stubs
+Imports AstoriaClientUnitTests.Stubs
 Imports Microsoft.Test.ModuleCore
 Imports Microsoft.VisualStudio.TestTools.UnitTesting
 
@@ -51,7 +51,7 @@ Partial Public Class ClientModule
             cleanups.Add(TestUtil.MetadataCacheCleaner)
             AstoriaUnitTests.Stubs.OpenWebDataServiceHelper.PageSizeCustomizer.Value = AddressOf PageSizeCustomizer
 
-            Me.ctx = New CustomDataContext(web.ServiceRoot)
+            Me.ctx = New AstoriaClientUnitTests.Stubs.CustomDataContext(web.ServiceRoot)
             'Me.'ctx.EnableAtom = True
             'Me.'ctx.Format.UseAtom()
 
@@ -81,8 +81,8 @@ Partial Public Class ClientModule
 
         <TestCategory("Partition3")> <TestMethod(), Variation("Make sure page size customizer is working correctly")>
         Public Sub PagingSizeTest()
-            Assert.AreEqual(3, ctx.CreateQuery(Of Customer)("/Customers").Execute().Count())
-            Assert.AreEqual(5, ctx.CreateQuery(Of Order)("/Orders").Execute().Count())
+            Assert.AreEqual(3, ctx.CreateQuery(Of AstoriaClientUnitTests.Stubs.Customer)("/Customers").Execute().Count())
+            Assert.AreEqual(5, ctx.CreateQuery(Of AstoriaClientUnitTests.Stubs.Order)("/Orders").Execute().Count())
         End Sub
 
         <TestCategory("Partition3")> <TestMethod(), Variation("Non tracking DSC factory and load testing")>
@@ -90,14 +90,14 @@ Partial Public Class ClientModule
             Dim q = ctx.Customers               ' first page = 1,2,3 
             Dim q2 = ctx.Customers.Skip(2)      ' skipped 2 = 3,4,5 (total should be 5)
 
-            Dim custs = New DataServiceCollection(Of Customer)(q, TrackingMode.None)
+            Dim custs = New DataServiceCollection(Of AstoriaClientUnitTests.Stubs.Customer)(q, TrackingMode.None)
             Assert.AreEqual(custs.Count, 3)
 
             custs.Load(q2)
             ' Load should not load duplicated entities
             Assert.AreEqual(custs.Count, 5)
 
-            Dim custs2 = New DataServiceCollection(Of Customer)(Nothing, TrackingMode.None)
+            Dim custs2 = New DataServiceCollection(Of AstoriaClientUnitTests.Stubs.Customer)(Nothing, TrackingMode.None)
             ' Loading another DSC
             custs2.Load(custs)
             Assert.AreEqual(custs2.Count, 5)
@@ -106,7 +106,7 @@ Partial Public Class ClientModule
             custs2.Load(ctx.Customers.Skip(5).FirstOrDefault())
             Assert.AreEqual(custs2.Count, 6)
 
-            Dim custs_tracking = New DataServiceCollection(Of Customer)(ctx)
+            Dim custs_tracking = New DataServiceCollection(Of AstoriaClientUnitTests.Stubs.Customer)(ctx)
             custs_tracking.Load(q)
             Assert.AreEqual(custs_tracking.Count, 3)
         End Sub
@@ -114,7 +114,7 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod(), Variation("DSC Loading multi level")>
         Public Sub DSC_LoadMultiLevelSimple()
             Dim q = ctx.Customers.Expand("Orders")
-            Dim custs = New DataServiceCollection(Of Customer)(q, TrackingMode.None)
+            Dim custs = New DataServiceCollection(Of AstoriaClientUnitTests.Stubs.Customer)(q, TrackingMode.None)
             Assert.AreEqual(3, custs.Count)
             Assert.AreEqual(5, custs.FirstOrDefault().Orders.Count)
         End Sub
@@ -122,7 +122,7 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod(), Variation("Retrieving Links from QOR")>
         Public Sub QOR_GetLinksMultiLevel()
             Dim q = ctx.Customers.Expand("Orders")
-            Dim qor = CType(q.Execute(), QueryOperationResponse(Of Customer))
+            Dim qor = CType(q.Execute(), QueryOperationResponse(Of AstoriaClientUnitTests.Stubs.Customer))
             Dim links = New List(Of String)()
 
             Try
@@ -147,9 +147,9 @@ Partial Public Class ClientModule
         <TestCategory("Partition3")> <TestMethod(), Variation("Retrieving links from DSC")>
         Public Sub DSC_GetLinksMultiLevel()
             Dim q = ctx.Customers.Expand("Orders")
-            For Each custs In New DataServiceCollection(Of Customer)() {
-                New DataServiceCollection(Of Customer)(q, TrackingMode.None),
-                New DataServiceCollection(Of Customer)(ctx, q, TrackingMode.AutoChangeTracking, Nothing, Nothing, Nothing)}
+            For Each custs In New DataServiceCollection(Of AstoriaClientUnitTests.Stubs.Customer)() {
+                New DataServiceCollection(Of AstoriaClientUnitTests.Stubs.Customer)(q, TrackingMode.None),
+                New DataServiceCollection(Of AstoriaClientUnitTests.Stubs.Customer)(ctx, q, TrackingMode.AutoChangeTracking, Nothing, Nothing, Nothing)}
 
                 Assert.IsNotNull(custs.Continuation)
                 Dim linksCount = 0
@@ -220,19 +220,19 @@ Partial Public Class ClientModule
         End Sub
 
         <TestCategory("Partition3")> <TestMethod()> Public Sub DSC_NonTrackingFullLoad()
-            Dim q = ctx.CreateQuery(Of Customer)("Customers").Expand("Orders")
-            Dim custs = New DataServiceCollection(Of Customer)(q, TrackingMode.None)
+            Dim q = ctx.CreateQuery(Of AstoriaClientUnitTests.Stubs.Customer)("Customers").Expand("Orders")
+            Dim custs = New DataServiceCollection(Of AstoriaClientUnitTests.Stubs.Customer)(q, TrackingMode.None)
 
             ' Load outer collection first.
             While (custs.Continuation IsNot Nothing)
-                custs.Load(ctx.Execute(Of Customer)(custs.Continuation))
+                custs.Load(ctx.Execute(Of AstoriaClientUnitTests.Stubs.Customer)(custs.Continuation))
             End While
 
             Dim i = 0
             For Each c In custs
                 While (c.Orders.Continuation IsNot Nothing)
                     If i Mod 2 = 0 Then
-                        c.Orders.Load(ctx.Execute(Of Order)(c.Orders.Continuation))
+                        c.Orders.Load(ctx.Execute(Of AstoriaClientUnitTests.Stubs.Order)(c.Orders.Continuation))
                     Else
                         ctx.LoadProperty(c, "Orders", c.Orders.Continuation)
                     End If
@@ -244,20 +244,20 @@ Partial Public Class ClientModule
         End Sub
 
         <TestCategory("Partition3")> <TestMethod()> Public Sub DSC_TrackingFullLoad()
-            Dim q = ctx.CreateQuery(Of Customer)("Customers").Expand("Orders")
-            Dim custs = New DataServiceCollection(Of Customer)(ctx)
+            Dim q = ctx.CreateQuery(Of AstoriaClientUnitTests.Stubs.Customer)("Customers").Expand("Orders")
+            Dim custs = New DataServiceCollection(Of AstoriaClientUnitTests.Stubs.Customer)(ctx)
             custs.Load(q)
 
             ' Load outer collection first
             While (custs.Continuation IsNot Nothing)
-                custs.Load(ctx.Execute(Of Customer)(custs.Continuation))
+                custs.Load(ctx.Execute(Of AstoriaClientUnitTests.Stubs.Customer)(custs.Continuation))
             End While
 
             Dim i = 0
             For Each c In custs
                 While (c.Orders.Continuation IsNot Nothing)
                     If i Mod 2 = 0 Then
-                        c.Orders.Load(ctx.Execute(Of Order)(c.Orders.Continuation))
+                        c.Orders.Load(ctx.Execute(Of AstoriaClientUnitTests.Stubs.Order)(c.Orders.Continuation))
                     Else
                         ctx.LoadProperty(c, "Orders", c.Orders.Continuation)
                     End If
@@ -269,8 +269,8 @@ Partial Public Class ClientModule
         End Sub
 
         <TestCategory("Partition3")> <TestMethod()> Public Sub DSC_ClearItems()
-            Dim q = ctx.CreateQuery(Of Customer)("Customers")
-            Dim custs = New DataServiceCollection(Of Customer)(ctx)
+            Dim q = ctx.CreateQuery(Of AstoriaClientUnitTests.Stubs.Customer)("Customers")
+            Dim custs = New DataServiceCollection(Of AstoriaClientUnitTests.Stubs.Customer)(ctx)
             custs.Load(q)
 
             Assert.IsNotNull(custs.Continuation)
@@ -279,7 +279,7 @@ Partial Public Class ClientModule
         End Sub
 
         <TestCategory("Partition3")> <TestMethod()> Public Sub DSC_NegativeTrackingAPITests()
-            Dim custs = New DataServiceCollection(Of Customer)(Nothing, TrackingMode.None)
+            Dim custs = New DataServiceCollection(Of AstoriaClientUnitTests.Stubs.Customer)(Nothing, TrackingMode.None)
 
             Try
                 custs.Detach()
@@ -296,7 +296,7 @@ Partial Public Class ClientModule
         End Sub
 
         <TestCategory("Partition3")> <TestMethod()> Public Sub QOR_GetNextLinkNegative()
-            Dim qor = CType(ctx.CreateQuery(Of Customer)("Customers").Expand("Orders").Execute(), QueryOperationResponse(Of Customer))
+            Dim qor = CType(ctx.CreateQuery(Of AstoriaClientUnitTests.Stubs.Customer)("Customers").Expand("Orders").Execute(), QueryOperationResponse(Of AstoriaClientUnitTests.Stubs.Customer))
 
             Dim previousOrderCollection As ICollection = Nothing
             For Each cust In qor
@@ -314,7 +314,7 @@ Partial Public Class ClientModule
         End Sub
 
         <TestCategory("Partition3")> <TestMethod()> Public Sub CTX_LoadPrimitivePropertyWithLink()
-            Dim cust = ctx.CreateQuery(Of Customer)("Customers").First()
+            Dim cust = ctx.CreateQuery(Of AstoriaClientUnitTests.Stubs.Customer)("Customers").First()
             Dim descriptor = ctx.GetEntityDescriptor(cust)
             ctx.LoadProperty(cust, "Name", New Uri(descriptor.EditLink.ToString() & "/Name"))
             ctx.LoadProperty(cust, "BestFriend", New Uri(descriptor.EditLink.ToString() & "/BestFriend"))
@@ -322,8 +322,8 @@ Partial Public Class ClientModule
         End Sub
 
         <TestCategory("Partition3")> <TestMethod()> Public Sub QOR_FullLoad()
-            Dim q = ctx.CreateQuery(Of Customer)("Customers").Expand("Orders($expand=OrderDetails)")
-            Dim qor = CType(q.Execute(), QueryOperationResponse(Of Customer))
+            Dim q = ctx.CreateQuery(Of AstoriaClientUnitTests.Stubs.Customer)("Customers").Expand("Orders($expand=OrderDetails)")
+            Dim qor = CType(q.Execute(), QueryOperationResponse(Of AstoriaClientUnitTests.Stubs.Customer))
 
             Dim nextCustLink As DataServiceQueryContinuation(Of AstoriaClientUnitTests.Stubs.Customer)
 
@@ -335,14 +335,14 @@ Partial Public Class ClientModule
                 For Each c In qor
 
                     Dim nextOrderLink = qor.GetContinuation(c.Orders)
-                    Dim ordersEnumerable As IEnumerable(Of Order) = c.Orders
+                    Dim ordersEnumerable As IEnumerable(Of AstoriaClientUnitTests.Stubs.Order) = c.Orders
 
                     Do
                         For Each o In ordersEnumerable
-                            Dim nextODLink As DataServiceQueryContinuation(Of OrderDetail)
+                            Dim nextODLink As DataServiceQueryContinuation(Of AstoriaClientUnitTests.Stubs.OrderDetail)
 
                             If (isContinuedOrders) Then
-                                nextODLink = CType(ordersEnumerable, QueryOperationResponse(Of Order)).GetContinuation(o.OrderDetails)
+                                nextODLink = CType(ordersEnumerable, QueryOperationResponse(Of AstoriaClientUnitTests.Stubs.Order)).GetContinuation(o.OrderDetails)
                             Else
                                 nextODLink = qor.GetContinuation(o.OrderDetails)
                             End If
@@ -371,7 +371,7 @@ Partial Public Class ClientModule
                         Next
 
                         If (isContinuedOrders) Then
-                            nextOrderLink = CType(ordersEnumerable, QueryOperationResponse(Of Order)).GetContinuation()
+                            nextOrderLink = CType(ordersEnumerable, QueryOperationResponse(Of AstoriaClientUnitTests.Stubs.Order)).GetContinuation()
                         End If
 
                         If (nextOrderLink IsNot Nothing) Then
@@ -423,12 +423,12 @@ Partial Public Class ClientModule
         <EntityType()>
         Public Class NarrowCustomerWithPagableOrders
 
-            Private m_Orders As MyPagableCollection(Of Order) = New MyPagableCollection(Of Order)()
-            Public Property Orders() As MyPagableCollection(Of Order)
+            Private m_Orders As MyPagableCollection(Of AstoriaClientUnitTests.Stubs.Order) = New MyPagableCollection(Of AstoriaClientUnitTests.Stubs.Order)()
+            Public Property Orders() As MyPagableCollection(Of AstoriaClientUnitTests.Stubs.Order)
                 Get
                     Return m_Orders
                 End Get
-                Set(ByVal value As MyPagableCollection(Of Order))
+                Set(ByVal value As MyPagableCollection(Of AstoriaClientUnitTests.Stubs.Order))
                     m_Orders = value
                 End Set
             End Property
@@ -489,7 +489,7 @@ Partial Public Class ClientModule
                             "</feed>"
                         Dim context = New DataServiceContext(request.ServiceRoot)
                         'context.EnableAtom = True
-                        Dim qor = CType(context.Execute(Of Customer)("/Items"), QueryOperationResponse(Of Customer))
+                        Dim qor = CType(context.Execute(Of AstoriaClientUnitTests.Stubs.Customer)("/Items"), QueryOperationResponse(Of AstoriaClientUnitTests.Stubs.Customer))
                         Dim exception = TestUtil.RunCatching(Sub()
                                                                  qor.AsEnumerable().Count()
                                                              End Sub)

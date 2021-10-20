@@ -23,38 +23,38 @@
  
   <PropertyGroup>
     <!--Define constants that are used in ...\src\AssemblyInfo\AssemblyInfoCommon.cs to generate assembly attributes-->
-    <DefineConstants Condition="'$(UseVsVersion)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_PRODUCT_VS</DefineConstants>
-    <DefineConstants Condition="'$(AssemblyAttributeSuppressSecurityRules)' == 'true'">$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
-    <DefineConstants Condition="'$(AssemblyAttributeClsCompliant)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_CLS_COMPLIANT</DefineConstants>
-    <DefineConstants Condition="'$(SecurityMigration)' == 'true'">$(DefineConstants);SECURITY_MIGRATION</DefineConstants>
-    <DefineConstants Condition="'$(AssemblyAttributeComVisible)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_COM_VISIBLE</DefineConstants>
-    <DefineConstants Condition="'$(AssemblyAttributeComCompatibleSideBySide)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_COM_COMPATIBLE_SIDEBYSIDE</DefineConstants>
-    <DefineConstants Condition="'$(TransparentAssembly)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_TRANSPARENT_ASSEMBLY</DefineConstants>
-    <DefineConstants Condition="'$(AllowPartialTrustedCalls)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_ALLOW_PARTIALLY_TRUSTED_CALLERS</DefineConstants>
-    <DefineConstants Condition="'$(ConditionalAPTCA_L2)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2</DefineConstants>
-    <DefineConstants Condition="'$(AssemblyAttributeSkipVerificationInFullTrust)' == 'true'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST</DefineConstants>
-    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v4.5'">$(DefineConstants);ASSEMBLY_ATTRIBUTE_NO_BUILD_NUM_IN_VERSION</DefineConstants>
+    <DefineConstants Condition="'$(UseVsVersion)' == 'true'">$(DefineConstants),ASSEMBLY_ATTRIBUTE_PRODUCT_VS</DefineConstants>
+    <DefineConstants Condition="'$(AssemblyAttributeSuppressSecurityRules)' == 'true'">$(DefineConstants),SUPPRESS_SECURITY_RULES</DefineConstants>
+    <DefineConstants Condition="'$(AssemblyAttributeClsCompliant)' == 'true'">$(DefineConstants),ASSEMBLY_ATTRIBUTE_CLS_COMPLIANT</DefineConstants>
+    <DefineConstants Condition="'$(SecurityMigration)' == 'true'">$(DefineConstants),SECURITY_MIGRATION</DefineConstants>
+    <DefineConstants Condition="'$(AssemblyAttributeComVisible)' == 'true'">$(DefineConstants),ASSEMBLY_ATTRIBUTE_COM_VISIBLE</DefineConstants>
+    <DefineConstants Condition="'$(AssemblyAttributeComCompatibleSideBySide)' == 'true'">$(DefineConstants),ASSEMBLY_ATTRIBUTE_COM_COMPATIBLE_SIDEBYSIDE</DefineConstants>
+    <DefineConstants Condition="'$(TransparentAssembly)' == 'true'">$(DefineConstants),ASSEMBLY_ATTRIBUTE_TRANSPARENT_ASSEMBLY</DefineConstants>
+    <DefineConstants Condition="'$(AllowPartialTrustedCalls)' == 'true'">$(DefineConstants),ASSEMBLY_ATTRIBUTE_ALLOW_PARTIALLY_TRUSTED_CALLERS</DefineConstants>
+    <DefineConstants Condition="'$(ConditionalAPTCA_L2)' == 'true'">$(DefineConstants),ASSEMBLY_ATTRIBUTE_CONDITIONAL_APTCA_L2</DefineConstants>
+    <DefineConstants Condition="'$(AssemblyAttributeSkipVerificationInFullTrust)' == 'true'">$(DefineConstants),ASSEMBLY_ATTRIBUTE_SKIP_VERIFICATION_IN_FULLTRUST</DefineConstants>
+    <DefineConstants Condition="'$(TargetFrameworkVersion)' == 'v4.5'">$(DefineConstants),ASSEMBLY_ATTRIBUTE_NO_BUILD_NUM_IN_VERSION</DefineConstants>
   </PropertyGroup>
 
  <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'netstandard2.1'">
-    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
+    <DefineConstants>$(DefineConstants),SUPPRESS_SECURITY_RULES;</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'netstandard2.0'">
-    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
+    <DefineConstants>$(DefineConstants),SUPPRESS_SECURITY_RULES;</DefineConstants>
   </PropertyGroup>
 
 
   <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'net45'">
-    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES;</DefineConstants>
+    <DefineConstants>$(DefineConstants),SUPPRESS_SECURITY_RULES;</DefineConstants>
   </PropertyGroup>
   
   <PropertyGroup Condition ="'$(TargetFrameworkVersion)' == 'v4.5'">
-    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
+    <DefineConstants>$(DefineConstants),SUPPRESS_SECURITY_RULES</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition ="'$(TargetFramework)' == 'net45'">
-    <DefineConstants>$(DefineConstants);SUPPRESS_SECURITY_RULES</DefineConstants>
+    <DefineConstants>$(DefineConstants),SUPPRESS_SECURITY_RULES</DefineConstants>
   </PropertyGroup>
   
   
@@ -76,11 +76,11 @@
 
   
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
-    <DefineConstants>$(DefineConstants);ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_11</DefineConstants>
+    <DefineConstants>$(DefineConstants),ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_11</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp1.0'">
-    <DefineConstants>$(DefineConstants);ASSEMBLY_ATTRIBUTE_ON_NETCORE_10</DefineConstants>
+    <DefineConstants>$(DefineConstants),ASSEMBLY_ATTRIBUTE_ON_NETCORE_10</DefineConstants>
   </PropertyGroup>
   
    <!--StyleCop settings--> 

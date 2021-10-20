@@ -1771,8 +1771,8 @@ Partial Public Class ClientModule
             Dim v1PhotoEntityAfterException = ctx.Execute(Of StreamingServiceV1Photo)(New Uri("/V1Photos(1)", UriKind.Relative)).SingleOrDefault()
             Assert.AreEqual("Number1", v1PhotoEntityAfterException.Name)
 
-            For Each entity In ctx.Entities
-                Assert.AreEqual(entity.State, EntityStates.Unchanged)
+            For Each Entity As EntityDescriptor In ctx.Entities
+                Assert.AreEqual(Entity.State, EntityStates.Unchanged)
             Next
         End Sub
 #End Region
