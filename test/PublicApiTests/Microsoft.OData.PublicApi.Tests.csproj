@@ -3,9 +3,6 @@
     <AssemblyName>Microsoft.OData.PublicApi.Tests</AssemblyName>
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
-    <DelaySign>false</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
