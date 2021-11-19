@@ -6,9 +6,9 @@
     <AssemblyName>Microsoft.Spatial.Tests</AssemblyName>
     <!--<TargetFrameworks>net452;netcoreapp1.1;netcoreapp2.1;netcoreapp3.1;</TargetFrameworks>-->
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <!--<RestorePackages>true</RestorePackages>
+    <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <!--<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>-->
   </PropertyGroup>
   
