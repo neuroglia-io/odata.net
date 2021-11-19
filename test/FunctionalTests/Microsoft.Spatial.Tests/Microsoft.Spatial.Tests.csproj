@@ -8,8 +8,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <!--<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>-->
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <!--<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>-->
   </PropertyGroup>
   
   <PropertyGroup>
