@@ -23,12 +23,12 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
   
-  <!--<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\..\..\bin\AnyCPU\Release\Test\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   
-  <Import Project="..\Build.props" />-->
+  <!--<Import Project="..\Build.props" />-->
 
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
